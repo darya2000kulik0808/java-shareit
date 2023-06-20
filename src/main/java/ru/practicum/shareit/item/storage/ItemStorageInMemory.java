@@ -33,13 +33,13 @@ public class ItemStorageInMemory implements ItemStorage {
     }
 
     @Override
-    public void deleteItem(long userId, long itemId) {
+    public void deleteItem(Long userId, Long itemId) {
         userToItemIds.get(userId).remove(itemId);
         items.remove(itemId);
     }
 
     @Override
-    public Item getItemById(long itemId) {
+    public Item getItemById(Long itemId) {
         if (items.containsKey(itemId)) {
             return items.get(itemId);
         }
@@ -47,7 +47,7 @@ public class ItemStorageInMemory implements ItemStorage {
     }
 
     @Override
-    public Collection<Item> getAllByUserId(long userId) {
+    public Collection<Item> getAllByUserId(Long userId) {
         List<Long> itemsId = userToItemIds.getOrDefault(userId, new ArrayList<>());
         return itemsId.stream()
                 .map(items::get)

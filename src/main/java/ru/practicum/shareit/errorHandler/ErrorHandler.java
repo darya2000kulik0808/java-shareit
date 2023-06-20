@@ -36,9 +36,9 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleWrongEmail(final ValidationException e) {
+    public ResponseEntity<ErrorResponse> handleFailedValidation(final ValidationException e) {
         return new ResponseEntity<>(
-                new ErrorResponse("Эл. почта заполнена неверно.", e.getMessage()),
+                new ErrorResponse("Поля объекта заполнены неверно!", e.getMessage()),
                 HttpStatus.BAD_REQUEST
         );
     }

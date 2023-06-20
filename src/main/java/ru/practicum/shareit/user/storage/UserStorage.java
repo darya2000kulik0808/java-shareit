@@ -10,11 +10,11 @@ public interface UserStorage {
 
     User updateUser(User user);
 
-    boolean deleteUser(long id);
+    boolean deleteUser(Long id);
 
     Collection<User> getAllUsers();
 
-    User getUserById(long userId);
+    User getUserById(Long userId);
 
     boolean checkEmail(String email);
 }

@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(long id) {
+    public UserDto getUserById(Long id) {
         return UserMapper.toUserDto(userStorage.getUserById(id));
     }
 
@@ -45,12 +45,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-//    @Override
-//    public User updateUser(UserDto userDto, long id) {
-//        User user = UserMapper.toUser(userDto, id);
-//        return userStorage.updateUser(user);
-//    }
-
     @Override
     public User updateUser(User user) {
         userStorage.updateUser(user);
@@ -58,12 +52,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser(long id) {
+    public boolean deleteUser(Long id) {
         return userStorage.deleteUser(id);
     }
 
     @Override
-    public UserDto patchUser(long id, UserDto userDto) {
+    public UserDto patchUser(Long id, UserDto userDto) {
         User userToPatch = userStorage.getUserById(id);
 
         if (userDto.getName() != null && !userDto.getName().isBlank()) {

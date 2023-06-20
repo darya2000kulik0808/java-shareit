@@ -31,25 +31,25 @@ public class ItemController {
     @PostMapping
     @Validated(Create.class)
     public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
-                              @RequestHeader("X-Sharer-User-Id") long userId) {
+                              @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.createItem(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
     @Validated(Update.class)
     public ItemDto editItem(@Valid @RequestBody ItemDto itemDto,
-                            @PathVariable long itemId,
+                            @PathVariable Long itemId,
                             @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.updateItem(itemDto, itemId, userId);
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItemById(@PathVariable long id) {
+    public ItemDto getItemById(@PathVariable Long id) {
         return itemService.getItemById(id);
     }
 
     @GetMapping
-    public Collection<ItemDto> findAllByUserId(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemDto> findAllByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.getAllByUserId(userId);
     }
 
@@ -59,7 +59,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{itemId}")
-    public void deleteItem(@RequestHeader("X-Sharer-User-Id") long userId,
+    public void deleteItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                            @PathVariable long itemId) {
         itemService.deleteItem(userId, itemId);
     }

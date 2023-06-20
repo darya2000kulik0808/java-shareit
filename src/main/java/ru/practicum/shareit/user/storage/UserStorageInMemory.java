@@ -50,7 +50,7 @@ public class UserStorageInMemory implements UserStorage {
     }
 
     @Override
-    public boolean deleteUser(long id) {
+    public boolean deleteUser(Long id) {
         if (idUsers.containsKey(id)) {
             emails.remove(idUsers.get(id).getEmail());
             userEmails.remove(id, idUsers.get(id).getEmail());
@@ -69,7 +69,7 @@ public class UserStorageInMemory implements UserStorage {
     }
 
     @Override
-    public User getUserById(long userId) {
+    public User getUserById(Long userId) {
         if (idUsers.containsKey(userId)) {
             return idUsers.get(userId);
         }

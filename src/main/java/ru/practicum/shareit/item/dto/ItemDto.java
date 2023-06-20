@@ -16,7 +16,7 @@ import static ru.practicum.shareit.validation.ValidationGroups.Create;
 @Data
 @Builder
 public class ItemDto {
-    private long id;
+    private Long id;
     @NotBlank(groups = Create.class, message = "Имя не может быть пустым.")
     private String name;
     @NotBlank(groups = Create.class, message = "Описание не может быть пустым.")

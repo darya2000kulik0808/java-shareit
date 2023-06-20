@@ -29,14 +29,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto createItem(ItemDto itemDto, long userId) {
+    public ItemDto createItem(ItemDto itemDto, Long userId) {
         User user = userStorage.getUserById(userId);
         Item item = ItemMapper.toItem(itemDto, user);
         return ItemMapper.toItemDto(itemStorage.createItem(item));
     }
 
     @Override
-    public ItemDto updateItem(ItemDto itemDto, long id, long userId) {
+    public ItemDto updateItem(ItemDto itemDto, Long id, Long userId) {
 
         Item item = checkOwner(userId, id);
         if (itemDto.getName() != null) {
@@ -58,19 +58,19 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto getItemById(long id) {
+    public ItemDto getItemById(Long id) {
         return ItemMapper.toItemDto(itemStorage.getItemById(id));
     }
 
 
     @Override
-    public void deleteItem(long userId, long itemId) {
+    public void deleteItem(Long userId, Long itemId) {
         checkOwner(userId, itemId);
         itemStorage.deleteItem(userId, itemId);
     }
 
     @Override
-    public Collection<ItemDto> getAllByUserId(long userId) {
+    public Collection<ItemDto> getAllByUserId(Long userId) {
         userStorage.getUserById(userId);
         return itemStorage.getAllByUserId(userId).stream()
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
-    private Item checkOwner(long userId, long itemId) {
+    private Item checkOwner(Long userId, Long itemId) {
         userStorage.getUserById(userId);
         Item item = itemStorage.getItemById(itemId);
         long ownerId = item.getOwner().getId();
