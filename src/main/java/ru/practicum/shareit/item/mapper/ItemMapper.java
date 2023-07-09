@@ -1,8 +1,13 @@
 package ru.practicum.shareit.item.mapper;
 
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemWithBookingCommentsDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
+
+import java.util.List;
 
 public class ItemMapper {
 
@@ -13,7 +18,7 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .available(item.isAvailable())
                 .owner(item.getOwner())
-                .request(item.getRequest())
+                //.request(item.getRequest())
                 .build();
     }
 
@@ -24,7 +29,22 @@ public class ItemMapper {
                 .description(itemDto.getDescription())
                 .available(itemDto.getAvailable())
                 .owner(owner)
-                .request(itemDto.getRequest())
+                //.request(itemDto.getRequest())
+                .build();
+    }
+
+    public static ItemWithBookingCommentsDto toItemWithBookingComments(Item item,
+                                                                       List<BookingDto> bookings,
+                                                                       List<CommentDto> commentList) {
+        return ItemWithBookingCommentsDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.isAvailable())
+                .owner(item.getOwner())
+                .lastBooking(bookings.get(0))
+                .nextBooking(bookings.get(1))
+                .comments(commentList)
                 .build();
     }
 }
