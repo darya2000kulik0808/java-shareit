@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutDto;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-@Qualifier("BookingServiceImpl")
 public class BookingServiceImpl implements BookingService {
 
     private BookingRepository bookingRepository;

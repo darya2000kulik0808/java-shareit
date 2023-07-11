@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.service;
 
 import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.ObjectAlreadyExistsException;
 import ru.practicum.shareit.exceptions.ObjectNotFoundException;
@@ -17,7 +16,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Qualifier("UserServiceImpl")
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -52,12 +50,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(User user) {
-        userRepository.save(user);
-        return user;
-    }
-
-    @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
@@ -89,7 +81,7 @@ public class UserServiceImpl implements UserService {
                 }
                 userToPatch.setEmail(userDto.getEmail());
             }
-            return UserMapper.toUserDto(updateUser(userToPatch));
+            return UserMapper.toUserDto(userRepository.save(userToPatch));
         } else {
             throw new ObjectNotFoundException(String.format("Пользователь с айди %d не найден.", id));
         }

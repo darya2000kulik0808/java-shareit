@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.service;
 
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-@Qualifier("ItemServiceImpl")
 public class ItemServiceImpl implements ItemService {
 
     private final UserRepository userRepository;
