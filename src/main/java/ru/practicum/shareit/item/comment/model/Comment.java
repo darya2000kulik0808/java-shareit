@@ -1,18 +1,13 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.item.comment.model;
 
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
-import ru.practicum.shareit.enums.StatusEnum;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
-/**
- * TODO Sprint add-bookings.
- */
 
 @Getter
 @Setter
@@ -21,25 +16,23 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "BOOKINGS", schema = "PUBLIC")
-public class Booking {
+@Table(name = "COMMENTS", schema = "PUBLIC")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "START_DATE", nullable = false)
-    private LocalDateTime start;
-    @Column(name = "END_DATE", nullable = false)
-    private LocalDateTime end;
+    @Column(name = "TEXT")
+    private String text;
     @ManyToOne //(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ITEM_ID", nullable = false)
+    @JoinColumn(name = "ITEM_ID")
     @ToString.Exclude
     private Item item;
     @ManyToOne //(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOOKER_ID", nullable = false)
+    @JoinColumn(name = "AUTHOR_ID")
     @ToString.Exclude
-    private User booker;
-    @Enumerated(EnumType.STRING)
-    private StatusEnum status;
+    private User user;
+    @Column(name = "CREATED")
+    private LocalDateTime created;
 
     @Override
     public final boolean equals(Object o) {
@@ -50,8 +43,8 @@ public class Booking {
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this)
                 .getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Booking booking = (Booking) o;
-        return getId() != null && Objects.equals(getId(), booking.getId());
+        Comment comment = (Comment) o;
+        return getId() != null && Objects.equals(getId(), comment.getId());
     }
 
     @Override
