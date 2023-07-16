@@ -8,6 +8,8 @@ import ru.practicum.shareit.booking.dto.BookingOutDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 import static ru.practicum.shareit.validation.ValidationGroups.Create;
@@ -37,14 +39,26 @@ public class BookingController {
 
     @GetMapping
     public List<BookingOutDto> findAllBookingsForOneUser(@RequestParam(defaultValue = "ALL") String state,
-                                                         @RequestHeader("X-Sharer-User-Id") Long userId) {
-        return bookingService.findAllForUser(userId, state);
+                                                         @RequestHeader("X-Sharer-User-Id") Long userId,
+                                                         @Min(value = 0,
+                                                                 message = "Индекс первого элемента не может быть отрицательным!")
+                                                         @RequestParam(defaultValue = "0") Integer from,
+                                                         @Positive(
+                                                                 message = "Количество элементов должно быть положительным!")
+                                                         @RequestParam(defaultValue = "10") Integer size) {
+        return bookingService.findAllForUser(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingOutDto> findAllForOwner(@RequestParam(defaultValue = "ALL") String state,
-                                               @RequestHeader("X-Sharer-User-Id") Long ownerId) {
-        return bookingService.findAllForOwner(ownerId, state);
+                                               @RequestHeader("X-Sharer-User-Id") Long ownerId,
+                                               @Min(value = 0,
+                                                       message = "Индекс первого элемента не может быть отрицательным!")
+                                               @RequestParam(defaultValue = "0") Integer from,
+                                               @Positive(
+                                                       message = "Количество элементов должно быть положительным!")
+                                               @RequestParam(defaultValue = "10") Integer size) {
+        return bookingService.findAllForOwner(ownerId, state, from, size);
     }
 
     @PostMapping

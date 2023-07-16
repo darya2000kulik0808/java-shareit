@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutDto;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class BookingServiceImpl implements BookingService {
 
+    private static final Sort SORTED = Sort.by(Sort.Direction.DESC, "start");
     private BookingRepository bookingRepository;
     private ItemRepository itemRepository;
     private UserRepository userRepository;
@@ -43,8 +46,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingOutDto> findAllForUser(Long userId, String state) {
+    public List<BookingOutDto> findAllForUser(Long userId, String state, Integer from, Integer size) {
         checkUser(userId);
+        PageRequest page = PageRequest.of(from / size, size, SORTED);
         try {
             StateEnum stateEnum = StateEnum.valueOf(state);
             switch (stateEnum) {
@@ -85,7 +89,8 @@ public class BookingServiceImpl implements BookingService {
                             .collect(Collectors.toList());
                 default:
                     return bookingRepository
-                            .findAllByBooker_Id(userId)
+                            .findAllByBooker_Id(userId, page)
+                            .getContent()
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
@@ -97,8 +102,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingOutDto> findAllForOwner(Long ownerId, String state) {
+    public List<BookingOutDto> findAllForOwner(Long ownerId, String state, Integer from, Integer size) {
         checkUser(ownerId);
+        PageRequest page = PageRequest.of(from / size, size, SORTED);
         try {
             StateEnum stateEnum = StateEnum.valueOf(state);
             switch (stateEnum) {
@@ -139,7 +145,8 @@ public class BookingServiceImpl implements BookingService {
                             .collect(Collectors.toList());
                 default:
                     return bookingRepository
-                            .findAllByItemOwner(ownerId)
+                            .findAllByItemOwner(ownerId, page)
+                            .getContent()
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
@@ -207,7 +214,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Бронирование с id %d не найдено", bookingId)));
     }
 
-    private Item checkOwner(Long userId, Long itemId) {
+    private void checkOwner(Long userId, Long itemId) {
         checkUser(userId);
         Item item = checkItem(itemId);
         long ownerId = item.getOwner().getId();
@@ -215,7 +222,6 @@ public class BookingServiceImpl implements BookingService {
             throw new ObjectNotFoundException(
                     String.format("У пользователя с id %d нет вещи с id %d", userId, itemId));
         }
-        return item;
     }
 
     private void checkTime(LocalDateTime start, LocalDateTime end) {

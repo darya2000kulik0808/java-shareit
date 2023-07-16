@@ -23,11 +23,11 @@ public class Comment {
     private Long id;
     @Column(name = "TEXT")
     private String text;
-    @ManyToOne //(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_ID")
     @ToString.Exclude
     private Item item;
-    @ManyToOne //(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AUTHOR_ID")
     @ToString.Exclude
     private User user;

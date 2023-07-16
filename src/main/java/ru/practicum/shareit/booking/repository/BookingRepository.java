@@ -1,16 +1,23 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.enums.StatusEnum;
+import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface BookingRepository extends JpaRepository<Booking, Long> {
+public interface BookingRepository extends JpaRepository<Booking, Long>,
+        CrudRepository<Booking, Long>,
+        PagingAndSortingRepository<Booking, Long> {
 
-    List<Booking> findAllByBooker_Id(Long bookerId);
+    Page<Booking> findAllByBooker_Id(Long bookerId, Pageable page);
 
     List<Booking> findByBookerIdAndItemIdAndStatusAndStartIsBefore(Long userId,
                                                                    Long itemId,
@@ -22,7 +29,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("select b from Booking b " +
             "where b.item.owner.id = ?1 ")
-    List<Booking> findAllByItemOwner(Long ownerId);
+    Page<Booking> findAllByItemOwner(Long ownerId,  Pageable page);
 
     @Query("select b from Booking b " +
             "where b.item.owner.id = ?1 " +

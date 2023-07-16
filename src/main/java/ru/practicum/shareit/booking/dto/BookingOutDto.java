@@ -3,8 +3,8 @@ package ru.practicum.shareit.booking.dto;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.enums.StatusEnum;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.dto.ItemOutDto;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +15,6 @@ public class BookingOutDto {
     private LocalDateTime start;
     private LocalDateTime end;
     private StatusEnum status;
-    private Item item;
-    private User booker;
+    private ItemOutDto item;
+    private UserDto booker;
 }

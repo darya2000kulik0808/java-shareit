@@ -30,11 +30,11 @@ public class Booking {
     private LocalDateTime start;
     @Column(name = "END_DATE", nullable = false)
     private LocalDateTime end;
-    @ManyToOne //(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_ID", nullable = false)
     @ToString.Exclude
     private Item item;
-    @ManyToOne //(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOOKER_ID", nullable = false)
     @ToString.Exclude
     private User booker;
