@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 public class CommentDtoTest {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     @Autowired
     private JacksonTester<CommentDto> json;
 

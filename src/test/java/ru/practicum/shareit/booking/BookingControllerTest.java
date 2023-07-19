@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = BookingController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BookingControllerTest {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     private static final String URL = "/bookings";
     private static final int SIZE_DEFAULT = 10;
