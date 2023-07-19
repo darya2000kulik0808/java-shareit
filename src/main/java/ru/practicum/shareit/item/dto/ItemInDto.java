@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class ItemInDto {
     private Long id;
-    @NotBlank(groups = ValidationGroups.Create.class, message = "Имя не может быть пустым.")
+    @NotBlank(groups = ValidationGroups.Create.class, message = "Название не может быть пустым.")
     private String name;
     @NotBlank(groups = ValidationGroups.Create.class, message = "Описание не может быть пустым.")
     private String description;

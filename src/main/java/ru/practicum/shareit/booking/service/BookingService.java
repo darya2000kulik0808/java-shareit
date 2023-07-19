@@ -15,4 +15,5 @@ public interface BookingService {
     BookingOutDto createBooking(BookingDto bookingDto, Long userId);
 
     BookingOutDto approveOrRejectBooking(Long ownerId, Boolean approved, Long bookingId);
+
 }

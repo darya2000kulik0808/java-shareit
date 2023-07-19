@@ -54,7 +54,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         ItemRequest itemRequest = checkRequest(requestId);
         checkUser(userId);
         List<ItemOutDto> items = itemRepository.findAllByRequest_Id(requestId)
-                .stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+                .stream().map(ItemMapper::toItemOutDto).collect(Collectors.toList());
         ItemRequestOutDto itemRequestOutDto = ItemRequestMapper.toItemRequestOutDto(itemRequest);
         itemRequestOutDto.setItems(items);
         return itemRequestOutDto;
@@ -80,7 +80,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private void addItemsToRequests(List<ItemRequestOutDto> itemRequestDtos) {
         List<Long> requestIds = itemRequestDtos.stream().map(ItemRequestOutDto::getId).collect(Collectors.toList());
         List<ItemOutDto> itemDtos = itemRepository.findByRequestIdIn(requestIds).stream()
-                .map(ItemMapper::toItemDto).collect(Collectors.toList());
+                .map(ItemMapper::toItemOutDto).collect(Collectors.toList());
 
         if (itemDtos.isEmpty()) {
             itemRequestDtos.forEach(itemRequestOutDto -> itemRequestOutDto.setItems(Collections.emptyList()));

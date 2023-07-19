@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import ru.practicum.shareit.user.model.User;
@@ -31,6 +32,7 @@ public class ItemRequest {
     @ToString.Exclude
     private User requester;
     @Column(name = "CREATED")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime created;
 
     @Override

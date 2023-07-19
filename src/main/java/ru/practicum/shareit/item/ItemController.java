@@ -9,6 +9,8 @@ import ru.practicum.shareit.item.dto.ItemOutDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.Collection;
 
 import static ru.practicum.shareit.validation.ValidationGroups.Create;
@@ -59,13 +61,25 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemOutDto> findAllByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.getAllByUserId(userId);
+    public Collection<ItemOutDto> findAllByUserId(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                  @Min(value = 0,
+                                                          message = "Индекс первого элемента не может быть отрицательным!")
+                                                  @RequestParam(defaultValue = "0") Integer from,
+                                                  @Positive(
+                                                          message = "Количество элементов должно быть положительным!")
+                                                  @RequestParam(defaultValue = "10") Integer size) {
+        return itemService.getAllByUserId(userId, from, size);
     }
 
     @GetMapping("/search")
-    public Collection<ItemOutDto> findByText(@RequestParam String text) {
-        return itemService.getByText(text);
+    public Collection<ItemOutDto> findByText(@RequestParam String text,
+                                             @Min(value = 0,
+                                                     message = "Индекс первого элемента не может быть отрицательным!")
+                                             @RequestParam(defaultValue = "0") Integer from,
+                                             @Positive(
+                                                     message = "Количество элементов должно быть положительным!")
+                                             @RequestParam(defaultValue = "10") Integer size) {
+        return itemService.getByText(text, from, size);
     }
 
     @DeleteMapping("/{itemId}")

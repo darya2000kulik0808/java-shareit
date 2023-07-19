@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item.comment.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -32,6 +34,8 @@ public class Comment {
     @ToString.Exclude
     private User user;
     @Column(name = "CREATED")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm", iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime created;
 
     @Override

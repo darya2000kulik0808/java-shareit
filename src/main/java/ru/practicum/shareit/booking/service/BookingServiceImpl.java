@@ -54,35 +54,36 @@ public class BookingServiceImpl implements BookingService {
             switch (stateEnum) {
                 case WAITING:
                     return bookingRepository
-                            .findAllByBooker_IdAndStatus(userId, StatusEnum.WAITING)
+                            .findAllByBooker_IdAndStatus(userId, StatusEnum.WAITING, page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
                             .collect(Collectors.toList());
                 case PAST:
                     return bookingRepository
-                            .findAllByBooker_IdAndEndBefore(userId, LocalDateTime.now())
+                            .findAllByBooker_IdAndEndBefore(userId, LocalDateTime.now(), page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
                             .collect(Collectors.toList());
                 case FUTURE:
                     return bookingRepository
-                            .findAllByBooker_IdAndStartAfter(userId, LocalDateTime.now())
+                            .findAllByBooker_IdAndStartAfter(userId, LocalDateTime.now(), page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
                             .collect(Collectors.toList());
                 case CURRENT:
                     return bookingRepository
-                            .findByBookerIdAndStartIsBeforeAndEndIsAfter(userId, LocalDateTime.now(), LocalDateTime.now())
+                            .findByBookerIdAndStartIsBeforeAndEndIsAfter(userId,
+                                    LocalDateTime.now(), LocalDateTime.now(), page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
                             .collect(Collectors.toList());
                 case REJECTED:
                     return bookingRepository
-                            .findAllByBooker_IdAndStatus(userId, StatusEnum.REJECTED)
+                            .findAllByBooker_IdAndStatus(userId, StatusEnum.REJECTED, page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
@@ -110,35 +111,36 @@ public class BookingServiceImpl implements BookingService {
             switch (stateEnum) {
                 case WAITING:
                     return bookingRepository
-                            .findAllByItemOwnerAndStatus(ownerId, StatusEnum.WAITING)
+                            .findAllByItemOwnerAndStatus(ownerId, StatusEnum.WAITING, page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
                             .collect(Collectors.toList());
                 case PAST:
                     return bookingRepository
-                            .findByItemOwnerIdAndEndIsBefore(ownerId, LocalDateTime.now())
+                            .findByItemOwnerIdAndEndIsBefore(ownerId, LocalDateTime.now(), page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
                             .collect(Collectors.toList());
                 case FUTURE:
                     return bookingRepository
-                            .findByItemOwnerIdAndStartIsAfter(ownerId, LocalDateTime.now())
+                            .findByItemOwnerIdAndStartIsAfter(ownerId, LocalDateTime.now(), page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
                             .collect(Collectors.toList());
                 case CURRENT:
                     return bookingRepository
-                            .findByItemOwnerIdAndStartIsBeforeAndEndIsAfter(ownerId, LocalDateTime.now(), LocalDateTime.now())
+                            .findByItemOwnerIdAndStartIsBeforeAndEndIsAfter(ownerId,
+                                    LocalDateTime.now(), LocalDateTime.now(), page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)
                             .collect(Collectors.toList());
                 case REJECTED:
                     return bookingRepository
-                            .findAllByItemOwnerAndStatus(ownerId, StatusEnum.REJECTED)
+                            .findAllByItemOwnerAndStatus(ownerId, StatusEnum.REJECTED, page)
                             .stream()
                             .sorted(Comparator.comparing(Booking::getStart).reversed())
                             .map(BookingMapper::toBookingOutDto)

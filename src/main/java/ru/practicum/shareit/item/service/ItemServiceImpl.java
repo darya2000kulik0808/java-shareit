@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.service;
 
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
 @Service
 public class ItemServiceImpl implements ItemService {
 
+    private static final Sort SORTED = Sort.by(Sort.Direction.DESC, "created");
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
@@ -55,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
         } else {
             item = ItemMapper.toItem(itemDto, user);
         }
-        return ItemMapper.toItemDto(itemRepository.save(item));
+        return ItemMapper.toItemOutDto(itemRepository.save(item));
     }
 
     @Override
@@ -76,7 +79,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getAvailable() != null) {
             item.setAvailable(itemDto.getAvailable());
         }
-        return ItemMapper.toItemDto(itemRepository.save(item));
+        return ItemMapper.toItemOutDto(itemRepository.save(item));
     }
 
     @Override
@@ -84,17 +87,17 @@ public class ItemServiceImpl implements ItemService {
         checkUser(userId);
         Item item = checkItem(id);
 
-        ItemOutDto itemDto = ItemMapper.toItemDto(item);
+        ItemOutDto itemDto = ItemMapper.toItemOutDto(item);
 
         return setCommentsAndBookings(userId, itemDto);
     }
 
     @Override
-    public Collection<ItemOutDto> getAllByUserId(Long userId) {
+    public Collection<ItemOutDto> getAllByUserId(Long userId, Integer from, Integer size) {
         checkUser(userId);
-
-        List<ItemOutDto> items = itemRepository.findAllByOwner_Id(userId).stream()
-                .map(ItemMapper::toItemDto).collect(Collectors.toList());
+        PageRequest page = PageRequest.of(from / size, size);
+        List<ItemOutDto> items = itemRepository.findAllByOwner_Id(userId, page).getContent().stream()
+                .map(ItemMapper::toItemOutDto).collect(Collectors.toList());
 
         List<ItemOutDto> itemOut = new ArrayList<>();
 
@@ -111,14 +114,16 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemOutDto> getByText(String text) {
+    public Collection<ItemOutDto> getByText(String text, Integer from, Integer size) {
+        PageRequest page = PageRequest.of(from / size, size);
         if (text.isBlank()) {
             return Collections.emptyList();
         }
         return itemRepository
-                .search(text)
+                .search(text, page)
+                .getContent()
                 .stream()
-                .map(ItemMapper::toItemDto).collect(Collectors.toList());
+                .map(ItemMapper::toItemOutDto).collect(Collectors.toList());
     }
 
     @Override
@@ -150,15 +155,8 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-//    public List<ItemRequestOutDto> getRequestForItem(List<ItemDto> itemDto){
-//        List<Long> itemIds = itemDto.stream().map(ItemDto::getId).collect(Collectors.toList());
-//
-//        List<ItemRequestOutDto>
-//
-//    }
-
     public List<CommentDto> getComments(ItemOutDto item) {
-        List<CommentDto> commentList = commentRepository.findAllByItem_Id(item.getId())
+        List<CommentDto> commentList = commentRepository.findAllByItem_Id(item.getId(), SORTED)
                 .stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());

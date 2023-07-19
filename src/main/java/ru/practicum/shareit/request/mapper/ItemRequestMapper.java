@@ -18,10 +18,11 @@ public class ItemRequestMapper {
                 .build();
     }
 
-    public static ItemRequest toItemRequest(ItemRequestOutDto itemRequestOutDto, User requester) {
+
+    public static ItemRequest toItemRequest(ItemRequestOutDto itemRequestOutDto) {
         return ItemRequest.builder()
                 .description(itemRequestOutDto.getDescription())
-                .requester(requester)
+                .requester(itemRequestOutDto.getRequester())
                 .created(itemRequestOutDto.getCreated())
                 .build();
     }

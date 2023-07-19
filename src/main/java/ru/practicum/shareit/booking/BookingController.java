@@ -58,7 +58,7 @@ public class BookingController {
                                                @Positive(
                                                        message = "Количество элементов должно быть положительным!")
                                                @RequestParam(defaultValue = "10") Integer size) {
-        return bookingService.findAllForOwner(ownerId, state, from, size);
+        return bookingService.findAllForOwner(ownerId, state.toUpperCase(), from, size);
     }
 
     @PostMapping
