@@ -132,7 +132,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = checkItem(itemId);
         List<Booking> bookingList = bookingRepository
                 .findByBookerIdAndItemIdAndStatusAndStartIsBefore(userId,
-                        itemId, StatusEnum.APPROVED, LocalDateTime.now());
+                        itemId, StatusEnum.APPROVED, LocalDateTime.now().plusSeconds(1));
         if (!bookingList.isEmpty()) {
             Comment comment = CommentMapper.toComment(commentDto, user, item, LocalDateTime.now());
             return CommentMapper.toCommentDto(commentRepository.save(comment));
