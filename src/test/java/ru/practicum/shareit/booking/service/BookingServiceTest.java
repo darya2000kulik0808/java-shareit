@@ -15,10 +15,7 @@ import ru.practicum.shareit.booking.dto.BookingOutDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.enums.StatusEnum;
-import ru.practicum.shareit.exceptions.BookingAccessDeniedException;
-import ru.practicum.shareit.exceptions.BookingAccessDeniedForOwnerException;
-import ru.practicum.shareit.exceptions.UnknownStateException;
-import ru.practicum.shareit.exceptions.ValidException;
+import ru.practicum.shareit.exceptions.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -278,8 +275,18 @@ class BookingServiceTest {
     void add() {
         long ownerId = owner.getId();
         long itemId = item.getId();
+
         LocalDateTime start = booking.getStart().plusSeconds(300);
         LocalDateTime end = booking.getEnd().plusSeconds(600);
+
+        BookingDto bookingWithSameTime = new BookingDto();
+        bookingWithSameTime.setId(1L);
+        bookingWithSameTime.setStart(start);
+        bookingWithSameTime.setEnd(start);
+        bookingWithSameTime.setItemId(item.getId());
+        bookingWithSameTime.setBookerId(booker.getId());
+        bookingWithSameTime.setStatus(StatusEnum.APPROVED);
+
         BookingDto bookingToSave = BookingDto.builder()
                 .itemId(itemId)
                 .start(start)
@@ -294,8 +301,17 @@ class BookingServiceTest {
                 () -> service.createBooking(bookingToSave, ownerId));
         assertEquals(error, exception.getMessage());
 
-        item.setAvailable(false);
+        item.setAvailable(true);
         long bookerId = booker.getId();
+        when(userRepo.findById(bookerId)).thenReturn(Optional.of(booker));
+        when(itemRepo.findById(itemId)).thenReturn(Optional.of(item));
+        error = "Время начала не может совпадать с концом!";
+        StartTimeAndEndTimeException exception1 = assertThrows(
+                StartTimeAndEndTimeException.class,
+                () -> service.createBooking(bookingWithSameTime, bookerId));
+        assertEquals(error, exception1.getMessage());
+
+        item.setAvailable(false);
         when(userRepo.findById(bookerId)).thenReturn(Optional.of(booker));
         when(itemRepo.findById(itemId)).thenReturn(Optional.of(item));
         error = String.format("Вещь с id %d  недоступна для бронирования", itemId);
