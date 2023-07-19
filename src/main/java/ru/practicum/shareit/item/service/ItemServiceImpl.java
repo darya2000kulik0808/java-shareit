@@ -132,9 +132,9 @@ public class ItemServiceImpl implements ItemService {
         Item item = checkItem(itemId);
         List<Booking> bookingList = bookingRepository
                 .findByBookerIdAndItemIdAndStatusAndStartIsBefore(userId,
-                        itemId, StatusEnum.APPROVED, LocalDateTime.now().plusSeconds(1));
+                        itemId, StatusEnum.APPROVED, LocalDateTime.now());
         if (!bookingList.isEmpty()) {
-            Comment comment = CommentMapper.toComment(commentDto, user, item, LocalDateTime.now());
+            Comment comment = CommentMapper.toComment(commentDto, user, item, LocalDateTime.now().plusSeconds(1));
             return CommentMapper.toCommentDto(commentRepository.save(comment));
         } else {
             throw new CommentAccessDeniedException("Вы не бронировали вещь. Оставить комментарий невозможно.");
