@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemInDto;
+import ru.practicum.shareit.item.dto.ItemOutDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.Collection;
 
 import static ru.practicum.shareit.validation.ValidationGroups.Create;
@@ -30,8 +33,8 @@ public class ItemController {
 
     @PostMapping
     @Validated(Create.class)
-    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
-                              @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ItemOutDto createItem(@Valid @RequestBody ItemInDto itemDto,
+                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.createItem(itemDto, userId);
     }
 
@@ -45,27 +48,38 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     @Validated(Update.class)
-    public ItemDto editItem(@Valid @RequestBody ItemDto itemDto,
-                            @PathVariable Long itemId,
-                            @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ItemOutDto editItem(@RequestBody ItemInDto itemDto,
+                               @PathVariable Long itemId,
+                               @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.updateItem(itemDto, itemId, userId);
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItemById(@PathVariable Long id,
-                               @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ItemOutDto getItemById(@PathVariable Long id,
+                                  @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.getItemById(id, userId);
     }
 
     @GetMapping
-    public Collection<ItemDto> findAllByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.getAllByUserId(userId);
+    public Collection<ItemOutDto> findAllByUserId(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                  @Min(value = 0,
+                                                          message = "Индекс первого элемента не может быть отрицательным!")
+                                                  @RequestParam(defaultValue = "0") Integer from,
+                                                  @Positive(
+                                                          message = "Количество элементов должно быть положительным!")
+                                                  @RequestParam(defaultValue = "10") Integer size) {
+        return itemService.getAllByUserId(userId, from, size);
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> findByText(@RequestParam String text) {
-        Collection<ItemDto> itemDtos = itemService.getByText(text);
-        return itemDtos;
+    public Collection<ItemOutDto> findByText(@RequestParam String text,
+                                             @Min(value = 0,
+                                                     message = "Индекс первого элемента не может быть отрицательным!")
+                                             @RequestParam(defaultValue = "0") Integer from,
+                                             @Positive(
+                                                     message = "Количество элементов должно быть положительным!")
+                                             @RequestParam(defaultValue = "10") Integer size) {
+        return itemService.getByText(text, from, size);
     }
 
     @DeleteMapping("/{itemId}")
@@ -73,6 +87,4 @@ public class ItemController {
                            @PathVariable long itemId) {
         itemService.deleteItem(userId, itemId);
     }
-
-
 }

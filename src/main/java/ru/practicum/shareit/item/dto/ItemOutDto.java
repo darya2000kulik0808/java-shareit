@@ -4,8 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
-import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,7 +17,7 @@ import static ru.practicum.shareit.validation.ValidationGroups.Create;
  */
 @Data
 @Builder
-public class ItemDto {
+public class ItemOutDto {
     private Long id;
     @NotBlank(groups = Create.class, message = "Имя не может быть пустым.")
     private String name;
@@ -26,9 +25,9 @@ public class ItemDto {
     private String description;
     @NotNull(groups = Create.class, message = "Укажите доступность товара")
     private Boolean available;
-    private User owner;
+    private UserDto owner;
     private BookingDto lastBooking;
     private BookingDto nextBooking;
     private List<CommentDto> comments;
-    private ItemRequest request;
+    private Long requestId;
 }

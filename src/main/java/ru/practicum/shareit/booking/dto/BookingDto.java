@@ -1,7 +1,9 @@
 package ru.practicum.shareit.booking.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.enums.StatusEnum;
 import ru.practicum.shareit.validation.ValidationGroups.Create;
 import ru.practicum.shareit.validation.ValidationGroups.Update;
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookingDto {
     private long id;
     @NotNull(groups = Create.class, message = "Время начала не может быть пустым.")
