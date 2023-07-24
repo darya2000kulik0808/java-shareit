@@ -12,8 +12,11 @@ import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
+import javax.validation.ValidationException;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -80,6 +83,8 @@ class ItemControllerTest {
                 .build();
         String json = mapper.writeValueAsString(itemDto);
         String error = "Название не может быть пустым";
+        when(client.updateItem(itemDto, 1, 1))
+                .thenThrow(new ValidationException(error));
         mvc.perform(patch(URL + "/1")
                         .header("X-Sharer-User-Id", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,9 +95,11 @@ class ItemControllerTest {
 
 
         //fail empty description
-        itemDto = ItemDto.builder().name("name").description("").build();
-        json = mapper.writeValueAsString(itemDto);
+        ItemDto itemDto1 = ItemDto.builder().name("name").description("").build();
+        json = mapper.writeValueAsString(itemDto1);
         error = "Описание не может быть пустым";
+        when(client.updateItem(itemDto1, 1, 1))
+                .thenThrow(new ValidationException(error));
         mvc.perform(patch(URL + "/1")
                         .header("X-Sharer-User-Id", 1)
                         .contentType(MediaType.APPLICATION_JSON)

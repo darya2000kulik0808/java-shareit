@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.validation.CheckBlank;
 
 @Service
 public class UserClient extends BaseClient {
@@ -29,6 +30,12 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> patchUser(long id, UserDto userDto) {
+        if (userDto.getName() != null) {
+            CheckBlank.checkNotBlank(userDto.getName(), "Имя");
+        }
+        if (userDto.getEmail() != null) {
+            CheckBlank.checkNotBlank(userDto.getEmail(), "Email");
+        }
         return patch("/" + id, userDto);
     }
 

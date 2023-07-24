@@ -11,6 +11,7 @@ import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.client.BaseClient;
 
+import javax.validation.ValidationException;
 import java.util.Map;
 
 @Service
@@ -32,18 +33,22 @@ public class BookingClient extends BaseClient {
     }
 
 
-    public ResponseEntity<Object> findAllForUser(long userId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> findAllForUser(long userId, String state, Integer from, Integer size) {
+        BookingState bookingState = BookingState.from(state)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
         Map<String, Object> parameters = Map.of(
-                "state", state.name(),
+                "state", bookingState.name(),
                 "from", from,
                 "size", size
         );
         return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> findAllForOwner(long ownerId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> findAllForOwner(long ownerId, String state, Integer from, Integer size) {
+        BookingState bookingState = BookingState.from(state)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
         Map<String, Object> parameters = Map.of(
-                "state", state.name(),
+                "state", bookingState.name(),
                 "from", from,
                 "size", size
         );
@@ -51,6 +56,9 @@ public class BookingClient extends BaseClient {
     }
 
     public ResponseEntity<Object> createBooking(BookItemRequestDto bookingDto, long userId) {
+        if (bookingDto.getEnd().isBefore(bookingDto.getStart())) {
+            throw new ValidationException("Дата окончания бронирования должна быть позже даты начала");
+        }
         return post("", userId, bookingDto);
     }
 

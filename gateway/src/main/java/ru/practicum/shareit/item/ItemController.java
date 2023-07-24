@@ -6,7 +6,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.validation.CheckBlank;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -43,12 +42,6 @@ public class ItemController {
     public ResponseEntity<Object> editItem(@Valid @RequestBody ItemDto itemDto,
                                            @PathVariable Long itemId,
                                            @RequestHeader("X-Sharer-User-Id") Long userId) {
-        if (itemDto.getName() != null) {
-            CheckBlank.checkNotBlank(itemDto.getName(), "Название");
-        }
-        if (itemDto.getDescription() != null) {
-            CheckBlank.checkNotBlank(itemDto.getDescription(), "Описание");
-        }
         return itemClient.updateItem(itemDto, itemId, userId);
     }
 

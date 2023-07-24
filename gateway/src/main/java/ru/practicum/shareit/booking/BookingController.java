@@ -6,11 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
-import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.validation.ValidationGroups;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 
@@ -37,9 +35,7 @@ public class BookingController {
                                                             @Positive(
                                                                     message = "Количество элементов должно быть положительным!")
                                                             @RequestParam(defaultValue = "10") Integer size) {
-        BookingState bookingState = BookingState.from(state)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
-        return bookingClient.findAllForUser(userId, bookingState, from, size);
+        return bookingClient.findAllForUser(userId, state, from, size);
     }
 
     @GetMapping("/owner")
@@ -51,18 +47,14 @@ public class BookingController {
                                                   @Positive(
                                                           message = "Количество элементов должно быть положительным!")
                                                   @RequestParam(defaultValue = "10") Integer size) {
-        BookingState bookingState = BookingState.from(state)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
-        return bookingClient.findAllForOwner(ownerId, bookingState, from, size);
+        return bookingClient.findAllForOwner(ownerId, state, from, size);
     }
 
     @PostMapping
     @Validated(ValidationGroups.Create.class)
     public ResponseEntity<Object> createBooking(@Valid @RequestBody BookItemRequestDto bookingDto,
                                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
-        if (!bookingDto.getEnd().isAfter(bookingDto.getStart())) {
-            throw new ValidationException("Дата окончания бронирования должна быть позже даты начала");
-        }
+
         return bookingClient.createBooking(bookingDto, userId);
     }
 

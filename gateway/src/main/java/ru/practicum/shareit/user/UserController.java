@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.validation.CheckBlank;
 
 import javax.validation.Valid;
 
@@ -30,12 +29,6 @@ public class UserController {
     @Validated(Update.class)
     public ResponseEntity<Object> editUser(@Valid @RequestBody UserDto userDto,
                                            @PathVariable long id) {
-        if (userDto.getName() != null) {
-            CheckBlank.checkNotBlank(userDto.getName(), "Имя");
-        }
-        if (userDto.getEmail() != null) {
-            CheckBlank.checkNotBlank(userDto.getEmail(), "Email");
-        }
         return userClient.patchUser(id, userDto);
     }
 

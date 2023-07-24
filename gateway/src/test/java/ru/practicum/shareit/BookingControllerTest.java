@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -48,6 +49,8 @@ class BookingControllerTest {
         //Fail By State
         String state = "qwerty";
         String error = "Unknown state: " + state;
+        when(client.findAllForUser(1, state, 0, 10))
+                .thenThrow(new IllegalArgumentException("Unknown state: " + state));
         mvc.perform(get(URL)
                         .header("X-Sharer-User-Id", 1)
                         .param("state", state)
@@ -92,6 +95,8 @@ class BookingControllerTest {
         //Fail By State
         String state = "QWERTY";
         String error = "Unknown state: " + state;
+        when(client.findAllForOwner(1, state, 0, 10))
+                .thenThrow(new IllegalArgumentException("Unknown state: " + state));
         mvc.perform(get(URL + "/owner")
                         .header("X-Sharer-User-Id", 1)
                         .param("state", state)

@@ -10,6 +10,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.validation.CheckBlank;
 
 import java.util.Map;
 
@@ -36,6 +37,12 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> updateItem(ItemDto itemDto, long itemId, long userId) {
+        if (itemDto.getName() != null) {
+            CheckBlank.checkNotBlank(itemDto.getName(), "Название");
+        }
+        if (itemDto.getDescription() != null) {
+            CheckBlank.checkNotBlank(itemDto.getDescription(), "Описание");
+        }
         return patch("/" + itemId, userId, itemDto);
     }
 

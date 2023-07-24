@@ -11,8 +11,11 @@ import ru.practicum.shareit.user.UserClient;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
 
+import javax.validation.ValidationException;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -74,6 +77,8 @@ public class UserControllerTest {
                 .build();
         String json = mapper.writeValueAsString(userDto);
         String error = "Имя не может быть пустым";
+        when(client.patchUser(1, userDto))
+                .thenThrow(new ValidationException(error));
         mvc.perform(patch(URL + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -82,10 +87,13 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.error", containsString(error)));
 
         //fail empty email
-        userDto.setName(null);
-        userDto.setEmail("");
-        json = mapper.writeValueAsString(userDto);
+        UserDto userDto1 = UserDto.builder().build();
+        userDto1.setName("name");
+        userDto1.setEmail("");
+        json = mapper.writeValueAsString(userDto1);
         error = "Email не может быть пустым";
+        when(client.patchUser(1, userDto1))
+                .thenThrow(new ValidationException(error));
         this.mvc.perform(patch(URL + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
